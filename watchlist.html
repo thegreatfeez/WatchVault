@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Watchlist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black">
+  <div class="bg-white min-h-screen w-full sm:w-[35rem] md:w-[40rem] lg:w-[50rem] font-sans mx-auto">
+  
+    <!-- Header with background image -->
+    <div class="bg-cover bg-center h-[200px] relative" style="background-image: url('image/bg-image.png');">
+      <div class="absolute top-0 left-0 w-full h-full bg-black/80"></div>
+
+      <!-- Content inside header -->
+      <div class="relative z-10 h-full flex items-center justify-between px-4 sm:px-6">
+        <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold">My Watchlist</h1>
+        <a href="index.html" class="text-white text-base sm:text-lg font-medium">Search for movies</a>
+      </div>
+    </div>
+
+    <!-- Empty Watchlist Message -->
+    <div class="flex flex-col items-center justify-center mt-24 px-4 text-center">
+      <p class="text-gray-300 text-xl font-medium mb-4">Your watchlist is looking a little empty…</p>
+      <button class="flex items-center gap-2 text-black text-lg font-semibold hover:underline">
+        <div class="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white">
+          <!-- + -->
+        </div>
+        Let’s add some movies!
+      </button>
+    </div>
+
+  </div> 
+</body>
+
+</html>
