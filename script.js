@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const moviesContainer = document.getElementById("movies-container");
   const emptyState      = document.getElementById("empty-state");
   let allMovieDetails   = [];
+  console.log(JSON.parse(localStorage.getItem('watchlist') || '[]'));
+  // localStorage.removeItem('watchlist');
+
 
   if (searchInput && searchButton && moviesContainer) {
     searchButton.addEventListener("click", async () => {
@@ -56,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Attach add handlers
         moviesContainer.querySelectorAll('.add-btn').forEach(btn => {
           btn.addEventListener('click', () => {
-            const id        = btn.dataset.id;
-            const movie     = allMovieDetails.find(m => m.imdbID === id);
+            const id = btn.dataset.id;
+            const movie = allMovieDetails.find(m => m.imdbID === id);
             const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
             if (watchlist.some(m => m.imdbID === id)) {
               return alert("Already in the watchlist ❌");
@@ -69,23 +72,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (emptyState) emptyState.remove();
+
       } catch (err) {
         console.error(err);
         moviesContainer.innerHTML = `<p class="text-red-500 text-center mt-8">Something went wrong. Try again later.</p>`;
       }
+      
+
     });
   }
 
-  // Watchlist Page Logic
-  const emptySection       = document.getElementById('empty-watchlist');
+  // Watchlist Page Logiconst emptySection 
   const watchlistContainer = document.getElementById('watchlist-container');
+  const removePlaceholder = document.getElementById("empty-state-watchlist")
+ 
 
-  if (emptySection && watchlistContainer) {
+  if (watchlistContainer) {
     const saved = JSON.parse(localStorage.getItem('watchlist') || '[]');
     if (saved.length === 0) return;
 
     // Remove empty state and render list
-    emptySection.remove();
+    if (removePlaceholder) removePlaceholder.remove()
+       watchlistContainer.classList.remove("flex","flex-col","items-center","justify-center","mt-[15rem]","px-4","text-center")
+      watchlistContainer.classList.add("overflow-y-auto","max-h-[70vh]","px-2","divide-y","w-full");
+
     const movieList = document.createElement('div');
     movieList.className = "overflow-y-auto max-h-[70vh] divide-y w-full px-4";
     watchlistContainer.parentElement.appendChild(movieList);
@@ -104,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <p class="text-sm text-gray-700 mt-2 line-clamp-3">${movie.Plot}</p>
             <button data-id="${movie.imdbID}" class="remove-btn mt-2 text-sm font-semibold flex items-center gap-1 hover:underline">
-              <img src="image/remove-Icon.png" class="w-4 h-4" /> Remove
+              <img src="image/remove-Icon.png" class="w-4 h-4" />
             </button>
           </div>
         </div>
