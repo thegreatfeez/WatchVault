@@ -1,100 +1,100 @@
-// Index Page Elements
-const searchInput = document.getElementById("search-input");
-const searchButton = document.getElementById("search-button");
-const moviesContainer = document.getElementById("movies-container");
-const emptyState = document.getElementById("empty-state");
-// Watchlist Page Elements
-const watchlistContainer = document.getElementById("watchlist-container");
-const addMovieButton = document.getElementById("add-movie-button");
-let savedWatchlist = []
-localStorage.setItem("savedWatchlist",JSON.stringify(savedWatchlist))
+document.addEventListener('DOMContentLoaded', () => {
+  // Index Page Elements
+  const searchInput     = document.getElementById("search-input");
+  const searchButton    = document.getElementById("search-button");
+  const moviesContainer = document.getElementById("movies-container");
+  const emptyState      = document.getElementById("empty-state");
+  let allMovieDetails   = [];
 
+  if (searchInput && searchButton && moviesContainer) {
+    searchButton.addEventListener("click", async () => {
+      const query = searchInput.value.trim();
+      searchInput.value = '';
+      try {
+        const res  = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(query)}&apikey=fc6b5734`);
+        const data = await res.json();
+        if (data.Response === "False") {
+          moviesContainer.innerHTML = `<p class="text-gray-400 text-center mt-8">No results found.</p>`;
+          return;
+        }
 
-// Handle Search Page Logic
-if (searchInput && searchButton && moviesContainer) {
-  searchButton.addEventListener("click", async () => {
-    const query = searchInput.value.trim();
-    searchInput.value = '';
-    console.log("Search query:", query);
+        // Fetch full details
+        allMovieDetails = await Promise.all(
+          data.Search.map(m =>
+            fetch(`https://www.omdbapi.com/?i=${m.imdbID}&apikey=fc6b5734`).then(r => r.json())
+          )
+        );
 
-    try {
-      const res = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=fc6b5734`);
-      const data = await res.json();
+        // Clear & style results container
+        moviesContainer.innerHTML = '';
+        moviesContainer.classList.remove("items-center","justify-center","mt-40","text-center","text-gray-400");
+        moviesContainer.classList.add("overflow-y-auto","max-h-[70vh]","px-2","divide-y","w-full");
 
-      if (data.Response === "False") {
-        moviesContainer.innerHTML = `<p class="text-gray-400 text-center mt-8">No results found.</p>`;
-        return;
-      }
-
-      const movieDetail = data.Search.map(async (movieId) => {
-        const response = await fetch(`http://www.omdbapi.com/?i=${movieId.imdbID}&apikey=fc6b5734`);
-        return await response.json();
-      });
-
-      const allMovieDetails = await Promise.all(movieDetail);
-      localStorage.setItem('watchlist', JSON.stringify(allMovieDetails))
-
-      moviesContainer.innerHTML = '';
-      moviesContainer.classList.remove("items-center", "justify-center", "mt-40", "text-center", "text-gray-400");
-      moviesContainer.classList.add("overflow-y-auto", "max-h-[70vh]", "px-2", "divide-y", "w-full");
-
-      allMovieDetails.forEach(movie => {
-        const movieHTML = `
-          <div class="flex gap-4 py-4">
-            <img src="${movie.Poster}" alt="${movie.Title}" class="w-[80px] h-[120px] object-cover rounded" />
-            <div class="flex flex-col text-left justify-between">
-              <div>
-                <div class="flex items-center gap-2">
-                  <h2 class="text-lg font-semibold text-black">${movie.Title}</h2>
-                  <span class="text-yellow-500 text-sm font-medium">⭐ ${movie.imdbRating}</span>
+        // Render movie cards
+        allMovieDetails.forEach(movie => {
+          moviesContainer.insertAdjacentHTML('beforeend', `
+            <div class="movie-card flex gap-4 py-4">
+              <img src="${movie.Poster}" alt="${movie.Title}" class="w-[80px] h-[120px] object-cover rounded" />
+              <div class="flex flex-col justify-between flex-1">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h2 class="text-lg font-semibold text-black">${movie.Title}</h2>
+                    <span class="text-yellow-500 text-sm font-medium">⭐ ${movie.imdbRating}</span>
+                  </div>
+                  <p class="text-sm text-gray-600 mt-1">${movie.Runtime} • ${movie.Genre}</p>
                 </div>
-                <p class="text-sm text-gray-600 mt-1">${movie.Runtime} • ${movie.Genre}</p>
+                <p class="text-sm text-gray-700 mt-2 line-clamp-3">${movie.Plot}</p>
+                <button data-id="${movie.imdbID}" class="add-btn mt-2 text-sm font-semibold flex items-center gap-1 hover:underline">
+                  <img src="image/add-Icon.png" alt="Add icon" class="w-4 h-4" />
+                  Add to watchlist
+                </button>
               </div>
-              <p class="text-sm text-gray-700 mt-2 line-clamp-3">${movie.Plot}</p>
-              <button class="mt-2 text-sm text-black font-semibold flex items-center gap-1 hover:underline">
-                <img src="image/add-Icon.png" alt="Add icon" data-id="${movie.imdbID}" class="w-4 h-4 add-btn" />
-                Watchlist
-              </button>
             </div>
-          </div>
-        `;
+          `);
+        });
 
-        moviesContainer.insertAdjacentHTML('beforeend', movieHTML);
-      });
+        // Attach add handlers
+        moviesContainer.querySelectorAll('.add-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id        = btn.dataset.id;
+            const movie     = allMovieDetails.find(m => m.imdbID === id);
+            const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+            if (watchlist.some(m => m.imdbID === id)) {
+              return alert("Already in the watchlist ❌");
+            }
+            watchlist.push(movie);
+            localStorage.setItem('watchlist', JSON.stringify(watchlist));
+            alert("Movie added to your watchlist ✅");
+          });
+        });
 
-      document.querySelectorAll('.add-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const imdbID = button.dataset.id
-        savedWatchlist.push(imdbID)
-        console.log(imdbID)
-        console.log(savedWatchlist)
-    })
-    });
-
-      if (emptyState) {
-        emptyState.remove();
+        if (emptyState) emptyState.remove();
+      } catch (err) {
+        console.error(err);
+        moviesContainer.innerHTML = `<p class="text-red-500 text-center mt-8">Something went wrong. Try again later.</p>`;
       }
+    });
+  }
 
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-      moviesContainer.innerHTML = `<p class="text-red-500 text-center mt-8">Something went wrong. Please try again later.</p>`;
-    }
-  });
-}
+  // Watchlist Page Logic
+  const emptySection       = document.getElementById('empty-watchlist');
+  const watchlistContainer = document.getElementById('watchlist-container');
 
- 
+  if (emptySection && watchlistContainer) {
+    const saved = JSON.parse(localStorage.getItem('watchlist') || '[]');
+    if (saved.length === 0) return;
 
-// Handle Watchlist Page Logic
-if (watchlistContainer && addMovieButton) {
+    // Remove empty state and render list
+    emptySection.remove();
     const movieList = document.createElement('div');
     movieList.className = "overflow-y-auto max-h-[70vh] divide-y w-full px-4";
     watchlistContainer.parentElement.appendChild(movieList);
 
-    savedWatchlist.forEach(movie => {
-      const movieHTML = `
-        <div class="flex gap-4 py-4">
+    saved.forEach(movie => {
+      movieList.insertAdjacentHTML('beforeend', `
+        <div class="watch-card flex gap-4 py-4">
           <img src="${movie.Poster}" alt="${movie.Title}" class="w-[80px] h-[120px] object-cover rounded" />
-          <div class="flex flex-col text-left justify-between">
+          <div class="flex flex-col justify-between flex-1">
             <div>
               <div class="flex items-center gap-2">
                 <h2 class="text-lg font-semibold text-black">${movie.Title}</h2>
@@ -103,12 +103,26 @@ if (watchlistContainer && addMovieButton) {
               <p class="text-sm text-gray-600 mt-1">${movie.Runtime} • ${movie.Genre}</p>
             </div>
             <p class="text-sm text-gray-700 mt-2 line-clamp-3">${movie.Plot}</p>
-            <button class="mt-2 text-sm text-black font-semibold flex items-center gap-1 hover:underline">
-              <img src="image/remove-Icon.png" class="w-4 h-4" />
+            <button data-id="${movie.imdbID}" class="remove-btn mt-2 text-sm font-semibold flex items-center gap-1 hover:underline">
+              <img src="image/remove-Icon.png" class="w-4 h-4" /> Remove
             </button>
           </div>
         </div>
-      `;
-      movieList.insertAdjacentHTML('beforeend', movieHTML);
+      `);
+    });
+
+    // Attach remove handlers
+    movieList.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id  = btn.dataset.id;
+        let list  = JSON.parse(localStorage.getItem('watchlist') || '[]');
+        list      = list.filter(m => m.imdbID !== id);
+        localStorage.setItem('watchlist', JSON.stringify(list));
+
+        const card = btn.closest('.watch-card');
+        if (card) card.remove();
+        if (list.length === 0) window.location.reload();
+      });
     });
   }
+});
