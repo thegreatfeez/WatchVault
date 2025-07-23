@@ -7,45 +7,34 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-black">
-<div class="bg-white min-h-screen w-full sm:w-[35rem] md:w-[40rem] lg:w-[50rem] font-sans mx-auto">
-  <!-- Header with background image -->
-  <div class="bg-contain bg-center h-[200px] relative" style="background-image: url('image/bg-image.png');">
-    <!-- Overlay (optional) -->
-    <div class="bg-black/80 w-full h-full absolute top-0 left-0"></div>
+  <div class="bg-white min-h-screen w-full sm:w-[35rem] md:w-[40rem] lg:w-[50rem] font-sans mx-auto">
+    <!-- Header -->
+    <div class="bg-contain bg-center h-[200px] relative" style="background-image: url('image/bg-image.png');">
+      <div class="bg-black/80 absolute inset-0"></div>
+      <div class="relative z-10 h-full flex items-center justify-between px-4 sm:px-6">
+        <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold">Find your film</h1>
+        <a href="watchlist.html" class="text-white text-base sm:text-lg font-medium">My Watchlist</a>
+      </div>
+    </div>
 
-    <!-- Content inside header -->
-<div class="relative z-10 h-full flex items-center justify-between px-4 sm:px-6">
-  <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold">
-    Find your film
-  </h1>
-  <a href="watchlist.html" class="text-white text-base sm:text-lg font-medium">
-    My Watchlist
-  </a>
-</div>
+    <!-- Search Bar -->
+    <div class="flex justify-center mt-6 px-4">
+      <div class="flex w-full max-w-2xl shadow-md rounded-md overflow-hidden border">
+        <img src="image/Search-icon.png" class="p-2 ml-2" alt="Search icon">
+        <input id="search-input" type="text" placeholder="Search for a movie" class="w-full px-4 py-2 outline-none" />
+        <button id="search-button" class="bg-gray-100 px-6 text-gray-800 font-medium hover:bg-gray-200">Search</button>
+      </div>
+    </div>
 
-
-  <!-- Search Bar -->
-  <div class="flex justify-center mt-6 px-4">
-    <div class="flex w-full max-w-2xl shadow-md rounded-md overflow-hidden border">
-      <img src="image/Search-icon.png" class="p-2 ml-2">
-      <input 
-        type="text" 
-        placeholder="Search for a movie" 
-        class="w-full px-4 py-2 outline-none"
-      />
-      <button class="bg-gray-100 px-6 text-gray-800 font-medium hover:bg-gray-200">
-        Search
-      </button>
+    <!-- Results Container -->
+    <div id="movies-container" class="flex flex-col items-center justify-center h-[80vh] text-center text-gray-400">
+      <div id="empty-state" class="flex flex-col items-center justify-center">
+        <div class="w-16 h-16 rounded-md mb-4"><img src="image/no-data--Icon.png" alt="No data"></div>
+        <p class="text-lg font-medium">Start exploring</p>
+      </div>
     </div>
   </div>
 
-  <!-- Empty State -->
-  <div class="flex flex-col items-center justify-center mt-40 text-center text-gray-400">
-    <div class="w-16 h-16 rounded-md mb-4">
-    <img src="image/no-data--Icon.png">
-    </div>
-    <p class="text-lg font-medium">Start exploring</p>
-  </div>
-</div>
+  <script src="script.js"></script>
 </body>
 </html>
