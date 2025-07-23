@@ -13,25 +13,30 @@
     <div class="bg-cover bg-center h-[200px] relative" style="background-image: url('image/bg-image.png');">
       <div class="absolute top-0 left-0 w-full h-full bg-black/80"></div>
 
-      <!-- Content inside header -->
+      <!-- Header content -->
       <div class="relative z-10 h-full flex items-center justify-between px-4 sm:px-6">
         <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold">My Watchlist</h1>
         <a href="index.html" class="text-white text-base sm:text-lg font-medium">Search for movies</a>
       </div>
     </div>
 
-    <!-- Empty Watchlist Message -->
-    <div class="flex flex-col items-center justify-center mt-[15rem] px-4 text-center">
-      <p class="text-gray-300 text-xl font-medium mb-4">Your watchlist is looking a little empty…</p>
-      <button class="flex items-center gap-2 text-black text-lg font-semibold hover:underline">
-        <div class="w-6 h-6 rounded-full flex items-center justify-center text-white">
-          <img src="image/add-Icon.png">
-        </div>
-        <a href="index.html">Let’s add some movies!</a>
-      </button>
-    </div>
+   <!-- Empty Watchlist Section -->
+<div id="empty-watchlist">
+  <div 
+    id="watchlist-container"
+    class="flex flex-col items-center justify-center mt-[15rem] px-4 text-center"
+  >
+    <p class="text-gray-300 text-xl font-medium mb-4">Your watchlist is looking a little empty…</p>
+    <button id="add-movie-button" class="flex items-center gap-2 text-black text-lg font-semibold hover:underline">
+      <div class="w-6 h-6 rounded-full flex items-center justify-center text-white">
+        <img src="image/add-Icon.png" alt="Add icon">
+      </div>
+      <a href="index.html">Let’s add some movies!</a>
+    </button>
+  </div>
+</div>
 
-  </div> 
+
+  <script src="script.js"></script>
 </body>
-
 </html>
