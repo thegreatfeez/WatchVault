@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const emptyState      = document.getElementById("empty-state");
   let allMovieDetails   = [];
   console.log(JSON.parse(localStorage.getItem('watchlist') || '[]'));
-  // localStorage.removeItem('watchlist');
-
+  
 
   if (searchInput && searchButton && moviesContainer) {
     searchButton.addEventListener("click", async () => {
