@@ -36,14 +36,14 @@ A web application to search for movies using the OMDb API and manage your person
 <details>
 <summary>Search & Results</summary>
 
-![Search Results](docs/screenshot-search.png)
+![Search Results](images/searchResult.png)
 
 </details>
 
 <details>
 <summary>My Watchlist</summary>
 
-![Watchlist](docs/screenshot-watchlist.png)
+![Watchlist](images/watchlist.png)
 
 </details>
 
